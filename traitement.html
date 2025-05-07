@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Tony" />
+
+<meta name="date" content="2025-04-04" />
+
+<title>Premiere_cartographie</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="site_libs/leaflet-binding-2.2.2/leaflet.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Cartographie Bornes</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="donnees.html">Données</a>
+</li>
+<li>
+  <a href="traitement.html">Traitement</a>
+</li>
+<li>
+  <a href="conclusion.html">Conclusion</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Premiere_cartographie</h1>
+<h4 class="author">Tony</h4>
+<h4 class="date">2025-04-04</h4>
+
+</div>
+
+
+<div id="traitement" class="section level2">
+<h2>Traitement</h2>
+<p>Avant toute chose, il serait pertinent de réaliser une brève
+présentation de notre zone d’étude. Sur le plan socio-démographique, le
+18ème arrondissement de Paris connaît une baisse démographique constante
+depuis au moins les années 1960 : la population passe de 236 776 à 188
+446 habitants sur la période 1968-2021 hors 2010. Au niveau des
+catégories professionnelles, entre 2010 et 2021 on constate une
+diminution de la proportion des ouvriers (8 à 6%) et des employés (16 à
+13%) au profit d’une hausse de la part des cadres et professions
+intellectuelles supérieures (24 à 30%). Le revenu moyen est de 14 412
+euros par an. Comme toute moyenne, cet indicateur cache des disparités
+territoriales au sein de notre arrondissement d’étude qui ont des effets
+vus plus tard dans cette étude.</p>
+<pre class="r"><code>library(leaflet)
+library(readr)
+library(dplyr)
+library(tidyr)</code></pre>
+<pre class="r"><code>bornes &lt;- read_csv(&quot;Point recharge Elec Paris 18.csv&quot;)</code></pre>
+<pre><code>## New names:
+## Rows: 101 Columns: 26
+## ── Column specification
+## ──────────────────────────────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (9): ...1, id_station_local, id_station_itinerance, nom_station, adresse_station, coordonneesX... dbl
+## (3): nbre_pdc, num_pdl, puissance_nominale lgl (12): gratuit, paiement_acte, paiement_cb,
+## paiement_autre, reservation, station_deux_roues, pri... dttm (1): date_mise_en_service date (1):
+## date_maj
+## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ Specify the column types or
+## set `show_col_types = FALSE` to quiet this message.
+## • `` -&gt; `...1`</code></pre>
+<pre class="r"><code># Séparer les coordonnées
+bornes &lt;- bornes %&gt;%
+  separate(coordonneesXY, into = c(&quot;latitude&quot;, &quot;longitude&quot;), sep = &quot;,&quot;, convert = TRUE)
+
+# Garder une ligne unique par station, en gardant le nombre de PDC
+bornes_uniques &lt;- bornes %&gt;%
+  distinct(adresse_station, latitude, longitude, nbre_pdc)</code></pre>
+<pre class="r"><code># Créer une palette de couleur
+pal &lt;- colorNumeric(
+  palette = &quot;YlOrBr&quot;,  # Jaune → Orange → Marron
+  domain = bornes_uniques$nbre_pdc
+)
+
+# Créer la carte
+leaflet(data = bornes_uniques) %&gt;%
+  addTiles() %&gt;%
+  addCircleMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    color = ~pal(nbre_pdc),
+    fillColor = ~pal(nbre_pdc),
+    fillOpacity = 0.8,
+    radius = 6,
+    popup = ~paste(adresse_station, &quot;&lt;br/&gt;&quot;, &quot;Nombre de points de charge :&quot;, nbre_pdc)
+  ) %&gt;%
+  addLegend(
+    &quot;bottomright&quot;,
+    pal = pal,
+    values = ~nbre_pdc,
+    title = &quot;Points de charge&quot;,
+    opacity = 1
+  )</code></pre>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-e8da4c84245acc0fb3f3" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-e8da4c84245acc0fb3f3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[[48.885006,48.892082,48.8913,48.898304,48.89311,48.891644,48.893276,48.88508,48.8954,48.89905,48.887253,48.89919,48.89061,48.884415,48.8823,48.88836,48.8861,48.8955,48.89767],[2.3475914,2.3331354,2.3385,2.3423252,2.34066,2.344978,2.3395,2.3375535,2.35,2.3649826,2.3330069,2.330375,2.35423,2.3305461,2.3395,2.3480344,2.3591,2.3283,2.352758],6,null,null,{"interactive":true,"className":"","stroke":true,"color":["#AA3C04","#662506","#662506","#662506","#FFFFE5","#AA3C04","#E1640E","#AA3C04","#AA3C04","#AA3C04","#FE9929","#AA3C04","#FFCE66","#E1640E","#E1640E","#AA3C04","#662506","#E1640E","#FFCE66"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#AA3C04","#662506","#662506","#662506","#FFFFE5","#AA3C04","#E1640E","#AA3C04","#AA3C04","#AA3C04","#FE9929","#AA3C04","#FFCE66","#E1640E","#E1640E","#AA3C04","#662506","#E1640E","#FFCE66"],"fillOpacity":0.8},null,null,["16 Rue Sofia 75018 Paris <br/> Nombre de points de charge : 6","220 Rue Marcadet 75018 Paris <br/> Nombre de points de charge : 7","150 Rue Marcadet 75018 Paris <br/> Nombre de points de charge : 7","1 Rue Fernand Labori 75018 Paris <br/> Nombre de points de charge : 7","110 Rue Ordener 75018 Paris <br/> Nombre de points de charge : 1","62 Rue Ramey 75018 Paris <br/> Nombre de points de charge : 6","120 Rue Ordener 75018 Paris <br/> Nombre de points de charge : 5","1bis Rue Ravignan 75018 Paris <br/> Nombre de points de charge : 6","28 Rue Championnet 75018 Paris <br/> Nombre de points de charge : 6","52 Rue Charles Hermite 75018 Paris <br/> Nombre de points de charge : 6","17 Rue Caulaincourt 75018 Paris <br/> Nombre de points de charge : 4","48 Rue Henri Huchard 75018 Paris <br/> Nombre de points de charge : 6","27 Rue Ordener 75018 Paris <br/> Nombre de points de charge : 3","1 Avenue Rachel 75018 Paris <br/> Nombre de points de charge : 5","2 Boulevard de Clichy 75018 Paris <br/> Nombre de points de charge : 5","17 Rue Custine 75018 Paris <br/> Nombre de points de charge : 6","1 Rue Jean-François Lépine 75018 Paris <br/> Nombre de points de charge : 7","1 Rue Navier 75017 Paris <br/> Nombre de points de charge : 5","150 Rue des Poissonniers 75018 Paris <br/> Nombre de points de charge : 3"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["#FFFFE5 , #FFFFE5 0%, #FFF0AE 16.6666666666667%, #FFCE66 33.3333333333333%, #FE9929 50%, #E1640E 66.6666666666667%, #AA3C04 83.3333333333333%, #662506 100%, #662506 "],"labels":["1","2","3","4","5","6","7"],"na_color":null,"na_label":"NA","opacity":1,"position":"bottomright","type":"numeric","title":"Points de charge","extra":{"p_1":0,"p_n":1},"layerId":null,"className":"info legend","group":null}]}],"limits":{"lat":[48.8823,48.89919],"lng":[2.3283,2.3649826]}},"evals":[],"jsHooks":[]}</script>
+<p>Passons désormais aux infrastructures de recharge électrique. Pour le
+18ème arrondissement de Paris, nous pouvons constater que les stations
+de recharge (ensemble de bornes) forment un réseau relativement maillé
+avec cependant un relatif délaissement du quartier de La Chapelle et une
+légère concentration dans le secteur de Montmartre. Les stations sont
+situées à proximité et même sur les voies structurantes de la
+circulation dans l’arrondissement (Boulevard Ney, Rue Ordener, Boulevard
+de Clichy, Boulevards Ornano-Barbès). Néanmoins, lorsqu’on analyse au
+niveau de la borne de recharge, et non plus de la station, on découvre
+une implantation inégale des 101 bornes de recharge. En analysant selon
+la découpe administrative, on constate une répartition décroissante des
+bornes électriques de l’ouest vers l’est. Dans les quartiers des
+Grandes-Carrières et de Clignancourt, on compte respectivement 58 et 24,
+tandis que les quartiers de la Goutte d’Or et de la Chapelle en
+comportent 13 et 6.</p>
+<pre class="r"><code>library(png)
+library(grid)
+
+img &lt;- readPNG(&quot;Carte_revenus_Paris18.png&quot;)
+grid.raster(img)</code></pre>
+<p><img src="traitement_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>En combinant avec la cartographie des revenus médians de 2019
+réalisée par l’Agence Parisienne d’Urbanisme, on constate que plus le
+revenu médian est élevé, plus le nombre de bornes accessibles est
+important. En effet, le secteur de Montmartre est marqué par des revenus
+médians allant de 32 500 euros à plus de 43 300 euros, tandis que le
+quartier de la Chapelle est marqué par des revenus médians 2 fois plus
+faibles, allant de 16 200 à 21 600 euros. Ce constat fait aussi aux
+dynamiques de gentrification touchant Paris depuis 1960, ayant pour
+origine les beaux-quartiers de l’ouest parisien et se diffusant vers
+l’est (Clerval, 2010).</p>
+<p>Pour comprendre cette répartition des bornes, remonter deux décennies
+plus tôt permet d’avoir un possible éclairage. Dans les années 2000, la
+municipalité souhaite mettre en place un système de partage de voitures
+électriques en libre-service. En partenariat avec le Groupe Bolloré et
+le syndicat Autolib’ et Vélib’ Métropole, le service nommé Autolib’
+ouvre au public en 2011. Par conséquent, l’installation des bornes a dû
+prendre en compte deux facteurs : une couverture importante avec le
+souhait de rendre le service accessible au plus grand nombre d’habitants
+possible, tout en essayant de viser les habitants ayant un fort pouvoir
+d’achat. La répartition des bornes de recharge n’a pas connu d’évolution
+majeure durant ces années d’Autolib car le service de partage a connu
+des difficultés malgré 40 000 abonnés actifs dans la capitale et la
+banlieue proche fin 2013. Selon le groupe Bolloré, la rentabilité de ce
+service ne sera jamais rentable en dessous de 80 000 abonnements. Le
+service a fermé en 2018, laissant comme héritage les bornes de recharge
+électrique.</p>
+<pre class="r"><code>library(readr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# Lecture des données
+voitures &lt;- read_csv(&quot;voiture_par_energie_Paris_18.csv&quot;)</code></pre>
+<pre><code>## Rows: 17 Columns: 8
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (1): LIBGEO
+## dbl  (4): CODGEO, NB_VP_RECHARGEABLES_EL, NB_VP_RECHARGEABLES_GAZ, NB_VP
+## lgl  (2): EPCI, LIBEPCI
+## date (1): DATE_ARRETE
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Conversion de la colonne date
+voitures$DATE_ARRETE &lt;- as.Date(voitures$DATE_ARRETE)
+
+# Restructuration des données en format long
+voitures_long &lt;- voitures %&gt;%
+  select(DATE_ARRETE, 
+         `Véhicules électriques` = NB_VP_RECHARGEABLES_EL,
+         `Véhicules gaz` = NB_VP_RECHARGEABLES_GAZ,
+         `Total véhicules` = NB_VP) %&gt;%
+  pivot_longer(-DATE_ARRETE, names_to = &quot;Type&quot;, values_to = &quot;Nombre&quot;)
+
+# Filtrer uniquement les véhicules électriques
+voitures_el &lt;- voitures %&gt;%
+  select(DATE_ARRETE, NB_VP_RECHARGEABLES_EL) %&gt;%
+  mutate(DATE_ARRETE = as.Date(DATE_ARRETE))
+
+# Graphique
+ggplot(voitures_el, aes(x = DATE_ARRETE, y = NB_VP_RECHARGEABLES_EL)) +
+  geom_line(color = &quot;Orange&quot;, size = 1.2) +
+  geom_point(color = &quot;Orange&quot;, size = 2) +
+  labs(
+    title = &quot;Évolution des véhicules électriques dans le 18ème arrondissement de Paris&quot;,
+    x = &quot;Date&quot;,
+    y = &quot;Nombre de voitures électriques immatriculées&quot;
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="traitement_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Ces dernières anciennement utilisées sous l’ère Autolib le sont
+toujours mais par des détenteurs de véhicules électriques. En se
+référant à l’ensemble des voitures électriques immatriculées dans le
+18ème arrondissement, il est assez facile d’élaborer une idée sur
+l’utilisation de ces bornes. Cet indice nous montre une évolution
+considérable : le nombre de véhicules électriques a été multiplié par
+presque en 4 sur une période de 4 ans. On passe de près de 400 voitures
+électriques à environ 1 600 entre 2021 et 2025 dans le 18ème
+arrondissement. Naturellement, la proposition d’augmenter le nombre des
+bornes semble être tout indiquée. Vu l’emprise spatiale prise par les
+stations de recharge et la composition du parc automobile immatriculée
+dans le 18ème arrondissement, la décision d’ajouter de nouvelles bornes
+doit prendre en compte la part des voitures électriques, qui reste
+extrêmement minoritaire malgré une très forte augmentation ces dernières
+années (cf. graphique ci-dessous). Développer de nouvelles bornes induit
+une suppression de places de stationnement pour les voitures diesel ou à
+essence ainsi que des travaux conséquents pour permettre l’accès au
+réseau d’électricité. Par conséquent, cela s’inclut dans les débats des
+mobilités dans la ville, dans lesquelles la voiture électrique est une
+composante dans cette réflexion spatiale, en rappelant que dans le 18ème
+arrondissement, 6,6% des habitants utilisent la voiture pour aller
+travailler (INSEE, 2019).</p>
+<pre class="r"><code># Même chose pour fin 2024
+data_2024 &lt;- voitures %&gt;%
+  filter(DATE_ARRETE == &quot;2024-12-31&quot;) %&gt;%
+  mutate(
+    `Véhicules électriques` = NB_VP_RECHARGEABLES_EL,
+    `Véhicules gaz` = NB_VP_RECHARGEABLES_GAZ,
+    `Autres véhicules` = NB_VP - NB_VP_RECHARGEABLES_EL - NB_VP_RECHARGEABLES_GAZ
+  ) %&gt;%
+  select(`Véhicules électriques`, `Véhicules gaz`, `Autres véhicules`) %&gt;%
+  pivot_longer(everything(), names_to = &quot;Type&quot;, values_to = &quot;Nombre&quot;)
+
+# Diagramme circulaire
+ggplot(data_2024, aes(x = &quot;&quot;, y = Nombre, fill = Type)) +
+  geom_bar(width = 1, stat = &quot;identity&quot;) +
+  coord_polar(theta = &quot;y&quot;) +
+  labs(title = &quot;Composition du parc automobile immatriculé dans le 18ème arrondissement de Paris au 31 décembre 2024&quot;) +
+  theme_void() +
+  scale_fill_brewer(palette = &quot;Set2&quot;)</code></pre>
+<p><img src="traitement_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
