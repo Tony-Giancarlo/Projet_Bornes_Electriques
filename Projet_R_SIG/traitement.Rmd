@@ -1,0 +1,140 @@
+---
+title: "Premiere_cartographie"
+author: "Tony"
+date: "2025-04-04"
+output: html_document
+---
+
+  
+## Traitement
+
+Avant toute chose, il serait pertinent de réaliser une brève présentation de notre zone d’étude. Sur le plan socio-démographique, le 18ème arrondissement de Paris connaît une baisse démographique constante depuis au moins les années 1960 : la population passe de 236 776 à 188 446 habitants sur la période 1968-2021 hors 2010. Au niveau des catégories professionnelles, entre 2010 et 2021 on constate une diminution de la proportion des ouvriers (8 à 6%) et des employés (16 à 13%) au profit d’une hausse de la part des cadres et professions intellectuelles supérieures (24 à 30%). Le revenu moyen est de 14 412 euros par an. Comme toute moyenne, cet indicateur cache des disparités territoriales au sein de notre arrondissement d’étude qui ont des effets vus plus tard dans cette étude.
+
+
+```{r setup}
+library(leaflet)
+library(readr)
+library(dplyr)
+library(tidyr)
+```
+
+``` {r}
+
+bornes <- read_csv("Point recharge Elec Paris 18.csv")
+
+# Séparer les coordonnées
+bornes <- bornes %>%
+  separate(coordonneesXY, into = c("latitude", "longitude"), sep = ",", convert = TRUE)
+
+# Garder une ligne unique par station, en gardant le nombre de PDC
+bornes_uniques <- bornes %>%
+  distinct(adresse_station, latitude, longitude, nbre_pdc)
+```
+
+```{r}
+# Créer une palette de couleur
+pal <- colorNumeric(
+  palette = "YlOrBr",  # Jaune → Orange → Marron
+  domain = bornes_uniques$nbre_pdc
+)
+
+# Créer la carte
+leaflet(data = bornes_uniques) %>%
+  addTiles() %>%
+  addCircleMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    color = ~pal(nbre_pdc),
+    fillColor = ~pal(nbre_pdc),
+    fillOpacity = 0.8,
+    radius = 6,
+    popup = ~paste(adresse_station, "<br/>", "Nombre de points de charge :", nbre_pdc)
+  ) %>%
+  addLegend(
+    "bottomright",
+    pal = pal,
+    values = ~nbre_pdc,
+    title = "Points de charge",
+    opacity = 1
+  )
+```
+
+Passons désormais aux infrastructures de recharge électrique. Pour le 18ème arrondissement de Paris, nous pouvons constater que les stations de recharge (ensemble de bornes) forment un réseau relativement maillé avec cependant un relatif délaissement du quartier de La Chapelle et une légère concentration dans le secteur de Montmartre. Les stations sont situées à proximité et même sur les voies structurantes de la circulation dans l’arrondissement (Boulevard Ney, Rue Ordener, Boulevard de Clichy, Boulevards Ornano-Barbès). Néanmoins, lorsqu’on analyse au niveau de la borne de recharge, et non plus de la station, on découvre une implantation inégale des 101 bornes de recharge. En analysant selon la découpe administrative, on constate une répartition décroissante des bornes électriques de l’ouest vers l’est. Dans les quartiers des Grandes-Carrières et de Clignancourt, on compte respectivement 58 et 24, tandis que les quartiers de la Goutte d’Or et de la Chapelle en comportent 13 et 6. 
+
+```{r}
+library(png)
+library(grid)
+
+img <- readPNG("Carte_revenus_Paris18.png")
+grid.raster(img)
+
+```
+
+En combinant avec la cartographie des revenus médians de 2019 réalisée par l’Agence Parisienne d’Urbanisme, on constate que plus le revenu médian est élevé, plus le nombre de bornes accessibles est important. En effet, le secteur de Montmartre est marqué par des revenus médians allant de 32 500 euros à plus de 43 300 euros, tandis que le quartier de la Chapelle est marqué par des revenus médians 2 fois plus faibles, allant de 16 200 à 21 600 euros. Ce constat fait aussi aux dynamiques de gentrification touchant Paris depuis 1960, ayant pour origine les beaux-quartiers de l’ouest parisien et se diffusant vers l’est (Clerval, 2010). 
+
+Pour comprendre cette répartition des bornes, remonter deux décennies plus tôt permet d’avoir un possible éclairage. Dans les années 2000, la municipalité souhaite mettre en place un système de partage de voitures électriques en libre-service. En partenariat avec le Groupe Bolloré et le syndicat Autolib' et Vélib' Métropole, le service nommé Autolib’ ouvre au public en 2011. Par conséquent, l’installation des bornes a dû prendre en compte deux facteurs : une couverture importante avec le souhait de rendre le service accessible au plus grand nombre d’habitants possible, tout en essayant de viser les habitants ayant un fort pouvoir d’achat. La répartition des bornes de recharge n’a pas connu d’évolution majeure durant ces années d’Autolib car le service de partage a connu des difficultés malgré 40 000 abonnés actifs dans la capitale et la banlieue proche fin 2013. Selon le groupe Bolloré, la rentabilité de ce service ne sera jamais rentable en dessous de 80 000 abonnements. Le service a fermé en 2018, laissant comme héritage les bornes de recharge électrique.
+
+
+
+```{r}
+library(readr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# Lecture des données
+voitures <- read_csv("voiture_par_energie_Paris_18.csv")
+
+# Conversion de la colonne date
+voitures$DATE_ARRETE <- as.Date(voitures$DATE_ARRETE)
+
+# Restructuration des données en format long
+voitures_long <- voitures %>%
+  select(DATE_ARRETE, 
+         `Véhicules électriques` = NB_VP_RECHARGEABLES_EL,
+         `Véhicules gaz` = NB_VP_RECHARGEABLES_GAZ,
+         `Total véhicules` = NB_VP) %>%
+  pivot_longer(-DATE_ARRETE, names_to = "Type", values_to = "Nombre")
+
+# Filtrer uniquement les véhicules électriques
+voitures_el <- voitures %>%
+  select(DATE_ARRETE, NB_VP_RECHARGEABLES_EL) %>%
+  mutate(DATE_ARRETE = as.Date(DATE_ARRETE))
+
+# Graphique
+ggplot(voitures_el, aes(x = DATE_ARRETE, y = NB_VP_RECHARGEABLES_EL)) +
+  geom_line(color = "Orange", size = 1.2) +
+  geom_point(color = "Orange", size = 2) +
+  labs(
+    title = "Évolution des véhicules électriques dans le 18ème arrondissement de Paris",
+    x = "Date",
+    y = "Nombre de voitures électriques immatriculées"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+Ces dernières anciennement utilisées sous l’ère Autolib le sont toujours mais par des détenteurs de véhicules électriques. En se référant à l’ensemble des voitures électriques immatriculées dans le 18ème arrondissement, il est assez facile d’élaborer une idée sur l’utilisation de ces bornes. Cet indice nous montre une évolution considérable : le nombre de véhicules électriques a été multiplié par presque en 4 sur une période de 4 ans. On passe de près de 400 voitures électriques à environ 1 600 entre 2021 et 2025 dans le 18ème arrondissement. Naturellement, la proposition d’augmenter le nombre des bornes semble être tout indiquée. Vu l’emprise spatiale prise par les stations de recharge et la composition du parc automobile immatriculée dans le 18ème arrondissement, la décision d’ajouter de nouvelles bornes doit prendre en compte la part des voitures électriques, qui reste extrêmement minoritaire malgré une très forte augmentation ces dernières années (cf. graphique ci-dessous). Développer de nouvelles bornes induit une suppression de places de stationnement pour les voitures diesel ou à essence ainsi que des travaux conséquents pour permettre l’accès au réseau d’électricité. Par conséquent, cela s’inclut dans les débats des mobilités dans la ville, dans lesquelles la voiture électrique est une composante dans cette réflexion spatiale, en rappelant que dans le 18ème arrondissement, 6,6% des habitants utilisent la voiture pour aller travailler (INSEE, 2019).
+
+```{r}
+# Même chose pour fin 2024
+data_2024 <- voitures %>%
+  filter(DATE_ARRETE == "2024-12-31") %>%
+  mutate(
+    `Véhicules électriques` = NB_VP_RECHARGEABLES_EL,
+    `Véhicules gaz` = NB_VP_RECHARGEABLES_GAZ,
+    `Autres véhicules` = NB_VP - NB_VP_RECHARGEABLES_EL - NB_VP_RECHARGEABLES_GAZ
+  ) %>%
+  select(`Véhicules électriques`, `Véhicules gaz`, `Autres véhicules`) %>%
+  pivot_longer(everything(), names_to = "Type", values_to = "Nombre")
+
+# Diagramme circulaire
+ggplot(data_2024, aes(x = "", y = Nombre, fill = Type)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  labs(title = "Composition du parc automobile immatriculé dans le 18ème arrondissement de Paris au 31 décembre 2024") +
+  theme_void() +
+  scale_fill_brewer(palette = "Set2")
+
+```

@@ -1,0 +1,10 @@
+---
+title: "Introduction"
+author: "Alia"
+date: "2025-05-07"
+output: html_document
+---
+
+# Bienvenue
+
+Ce site présente une analyse des bornes de recharge à Paris.

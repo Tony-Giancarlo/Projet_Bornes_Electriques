@@ -1,0 +1,21 @@
+---
+title: "donnees"
+author: "Steven"
+date: "2025-05-07"
+output: html_document
+---
+
+```{r}
+knitr::include_graphics("Belib.jpeg")
+
+```
+
+Pour mener à bien notre analyse sur la place des bornes de recharge électrique dans le 18ᵉ arrondissement de Paris, nous avons mobilisé un ensemble de données issues de sources officielles et fiables, permettant d’évaluer à la fois l’existant, les usages, et le potentiel de développement. 
+
+Tout d’abord, les données de l’INSEE concernant la commune de Paris 18 (https://www.insee.fr/fr/statistiques/2011101?geo=COM-75118) mises à jour le 01 avril 2025 nous ont permis de dresser un portrait socio-démographique du territoire. Ces informations sur la population sont cruciales pour comprendre la localisation potentielle de la demande en recharge électrique, notamment dans les zones à forte densité résidentielle ou de passage. 
+Ensuite, les données sur le nombre de voitures par commune et par type d’énergie mises à jour le 29 avril 2025 sur le site de data.gouv.fr nous donnent un aperçu du parc automobile du 18ᵉ arrondissement, en particulier du nombre de véhicules électriques déjà en circulation. Cela permet d’estimer la demande actuelle en bornes de recharge. Les « Metadonnées_données_voitures_électriques » complètent cette approche en fournissant des détails supplémentaires sur l’évolution de ce parc, ce qui nous aide à analyser les dynamiques à venir et à anticiper les besoins futurs.
+
+ Pour ce qui est de l’offre, nous avons utilisé plusieurs jeux de données recensant les infrastructures existantes : le jeu de données « belib-points-de-recharge-pour-véhicules-électriques-donnees-statiques » produit par Direction de la Voirie et des Déplacements - Ville de Paris sur le site de opendata.paris.fr publié le 19 octobre 2021 et mise à jour le 07 mai 2025.
+
+Ces sources fournissent des informations précises sur la localisation géographique des bornes, leur accessibilité, leur puissance ainsi que leur opérateur. L’analyse croisée de ces données permet de cartographier la répartition actuelle des bornes et d’évaluer la couverture du territoire. L’ensemble de ces données constitue donc une base solide pour répondre à notre problématique, qui vise à analyser l’évolution du nombre de bornes, leur implantation spatiale, leur usage, et les perspectives d’implantation de nouvelles infrastructures. Elles permettent également de formuler des recommandations à destination des acteurs publics pour un aménagement plus équitable et efficace, en lien avec les enjeux de transition énergétique et de mobilité durable
+
